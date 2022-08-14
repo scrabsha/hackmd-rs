@@ -31,15 +31,7 @@ impl Note {
     pub async fn get(context: &Context, id: &str) -> Result<Note> {
         let path = format!("notes/{id}");
 
-        context
-            .client
-            .get(Context::make_url(&path))
-            .header("Authorization", &context.bearer)
-            .send()
-            .await?
-            .json()
-            .await
-            .map_err(Error::from)
+        context.get(&path).await
     }
 
     pub async fn update(context: &Context, id: &str, update: &NoteUpdate) -> Result<()> {
@@ -100,14 +92,6 @@ impl NoteUpdate {
     pub async fn patch(&self, context: &Context, id: &str) -> Result<()> {
         let path = format!("notes/{id}");
 
-        context
-            .client
-            .patch(Context::make_url(&path))
-            .header("Authorization", &context.bearer)
-            .json(self)
-            .send()
-            .await?;
-
-        Ok(())
+        context.patch(&path, self).await
     }
 }

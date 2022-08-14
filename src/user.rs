@@ -1,11 +1,7 @@
 use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
-use crate::{
-    context::Context,
-    error::{Error, Result},
-    team::Team,
-};
+use crate::{context::Context, error::Result, team::Team};
 
 #[derive(Debug, Deserialize, PartialEq, Serialize)]
 #[serde(rename_all = "camelCase")]
@@ -20,15 +16,7 @@ pub struct User {
 
 impl User {
     pub async fn me(context: &Context) -> Result<User> {
-        context
-            .client
-            .get(Context::make_url("me"))
-            .header("Authorization", &context.bearer)
-            .send()
-            .await?
-            .json()
-            .await
-            .map_err(Error::from)
+        context.get("me").await
     }
 }
 
